@@ -1,3 +1,4 @@
+
 import type { Config } from "tailwindcss";
 
 export default {
@@ -18,7 +19,24 @@ export default {
 			}
 		},
 		extend: {
+      fontFamily: {
+        sans: ['Poppins', 'sans-serif'],
+      },
 			colors: {
+        'brand-green': {
+          light: '#6EE7B7', // emerald-300
+          DEFAULT: '#10B981', // emerald-500
+          dark: '#047857',  // emerald-700
+        },
+        'brand-blue': {
+          light: '#7DD3FC', // sky-300
+          DEFAULT: '#0EA5E9', // sky-500
+          dark: '#0369A1',  // sky-700
+        },
+        'brand-teal': {
+          DEFAULT: '#14B8A6', // teal-500
+          dark: '#0D9488' // teal-600
+        },
 				border: 'hsl(var(--border))',
 				input: 'hsl(var(--input))',
 				ring: 'hsl(var(--ring))',
@@ -84,11 +102,22 @@ export default {
 					to: {
 						height: '0'
 					}
-				}
+				},
+        'fade-in-up': {
+          '0%': {
+            opacity: '0',
+            transform: 'translateY(20px)'
+          },
+          '100%': {
+            opacity: '1',
+            transform: 'translateY(0)'
+          },
+        },
 			},
 			animation: {
 				'accordion-down': 'accordion-down 0.2s ease-out',
-				'accordion-up': 'accordion-up 0.2s ease-out'
+				'accordion-up': 'accordion-up 0.2s ease-out',
+        'fade-in-up': 'fade-in-up 0.5s ease-out forwards',
 			}
 		}
 	},
