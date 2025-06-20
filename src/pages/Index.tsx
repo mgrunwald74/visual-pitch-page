@@ -157,7 +157,7 @@ const Index = () => {
               className="w-56 h-56 rounded-full border-4 border-white shadow-lg object-cover object-[center_0%]"
               style={{ objectPosition: 'center 0%' }}
             />
-            <div className="text-left md:text-left max-w-xl">
+            <div className="text-center md:text-left max-w-xl">
               <p className="text-lg italic">
                 „Als Kaminkehrer-Kollege weiß ich, wie wichtig Vertrauen und Partnerschaft sind. Lass uns gemeinsam mehr erreichen!“
               </p>
