@@ -1,8 +1,32 @@
-import React, { useEffect, useRef } from 'react';
-import { Target, ListChecks, BarChart2, Users, Zap, ShieldCheck, Gift, Handshake, MessageCircle } from 'lucide-react';
+import React, { useState, useEffect, useRef } from 'react';
+import { Target, ListChecks, Handshake, MessageCircle, Menu, X } from 'lucide-react';
 
 const Index = () => {
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const sectionsRef = useRef<Array<HTMLElement | null>>([]);
+
+  useEffect(() => {
+    if (isMobileMenuOpen) {
+      document.body.style.overflow = 'hidden';
+    } else {
+      document.body.style.overflow = 'auto';
+    }
+
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') {
+        setIsMobileMenuOpen(false);
+      }
+    };
+
+    if (isMobileMenuOpen) {
+      window.addEventListener('keydown', handleKeyDown);
+    }
+
+    return () => {
+      document.body.style.overflow = 'auto';
+      window.removeEventListener('keydown', handleKeyDown);
+    };
+  }, [isMobileMenuOpen]);
 
   useEffect(() => {
     const observer = new IntersectionObserver(
@@ -60,6 +84,11 @@ const Index = () => {
     }
   };
 
+  const handleMobileLinkClick = (id: string) => (e: React.MouseEvent<HTMLAnchorElement>) => {
+    handleScrollTo(id)(e);
+    setIsMobileMenuOpen(false);
+  };
+
   return (
     <div className="flex flex-col min-h-screen bg-slate-50 text-slate-800 font-sans">
       {/* Header */}
@@ -75,14 +104,40 @@ const Index = () => {
               ))}
             </nav>
             <div className="md:hidden">
-              {/* Mobile menu button placeholder */}
-              <button className="text-slate-700 hover:text-brand-green">
-                <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 6h16M4 12h16m-7 6h7"></path></svg>
+              <button
+                onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+                className="text-slate-700 hover:text-brand-green relative z-50"
+                aria-label="Menü öffnen/schließen"
+              >
+                {isMobileMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
               </button>
             </div>
           </div>
         </div>
       </header>
+
+      {/* Mobile Menu Overlay */}
+      {isMobileMenuOpen && (
+        <div 
+          className="md:hidden fixed inset-0 bg-white z-40 transition-opacity duration-300 ease-in-out"
+          onClick={() => setIsMobileMenuOpen(false)}
+        >
+          <div className="flex flex-col items-center justify-center h-full">
+            <nav className="flex flex-col items-center space-y-8">
+              {navItems.map((item) => (
+                <a 
+                  key={item.name} 
+                  href={item.href} 
+                  className="text-2xl font-semibold text-slate-800 hover:text-brand-green" 
+                  onClick={handleMobileLinkClick(item.scrollTo)}
+                >
+                  {item.name}
+                </a>
+              ))}
+            </nav>
+          </div>
+        </div>
+      )}
 
       {/* Hero Section */}
       <section ref={addToRefs} className="relative py-20 md:py-32 bg-gradient-to-br from-brand-teal to-brand-green-dark text-white animated-element">
@@ -186,7 +241,9 @@ const Index = () => {
           <h2 className="text-3xl sm:text-4xl font-bold text-center mb-16 text-slate-800">
             Was hast du davon?
           </h2>
-          <div className="overflow-x-auto shadow-xl rounded-lg">
+          
+          {/* Desktop Table */}
+          <div className="hidden md:block overflow-x-auto shadow-xl rounded-lg">
             <table className="min-w-full bg-white">
               <thead>
                 <tr>
@@ -213,6 +270,51 @@ const Index = () => {
                 ))}
               </tbody>
             </table>
+          </div>
+
+          {/* Mobile Cards */}
+          <div className="md:hidden space-y-6">
+            {[
+              { benefit: 'Umsatzpotenzial', varA: 'Höhere Marge durch Beratung', varB: 'Stabile Provision ohne Risiko' },
+              { benefit: 'Arbeitsaufwand', varA: 'Moderater Mehraufwand vor Ort', varB: 'Empfehlung via einfache Kontaktweitergabe' },
+              { benefit: 'Verantwortung', varA: 'Volle Kontrolle & Abrechnung', varB: 'MEA übernimmt Haftung & Abwicklung' },
+              { benefit: 'Kundenbindung', varA: 'Direkter Kontakt festigt Beziehung', varB: 'Wiederkehrende Provisionen' },
+            ].map((row, index) => (
+              <div 
+                key={index} 
+                className="bg-white rounded-xl shadow-lg p-6 transform transition-all duration-300 hover:shadow-xl hover:-translate-y-1"
+              >
+                {/* Benefit Header */}
+                <h3 className="text-lg font-semibold text-slate-900 mb-6 text-center border-b border-slate-200 pb-3">
+                  {row.benefit}
+                </h3>
+                
+                {/* Variants Container */}
+                <div className="space-y-4">
+                  {/* Variante A */}
+                  <div className="bg-gradient-to-r from-brand-green/10 to-brand-green/5 p-4 rounded-lg border-l-4 border-brand-green transition-all duration-200 hover:shadow-md">
+                    <div className="flex items-center mb-2">
+                      <Target className="w-4 h-4 text-brand-green mr-2" />
+                      <div className="text-xs font-medium text-brand-green-dark uppercase tracking-wider">
+                        Variante A
+                      </div>
+                    </div>
+                    <div className="text-sm text-brand-green-dark leading-relaxed">{row.varA}</div>
+                  </div>
+                  
+                  {/* Variante B */}
+                  <div className="bg-gradient-to-r from-brand-blue/10 to-brand-blue/5 p-4 rounded-lg border-l-4 border-brand-blue transition-all duration-200 hover:shadow-md">
+                    <div className="flex items-center mb-2">
+                      <Handshake className="w-4 h-4 text-brand-blue mr-2" />
+                      <div className="text-xs font-medium text-brand-blue-dark uppercase tracking-wider">
+                        Variante B
+                      </div>
+                    </div>
+                    <div className="text-sm text-brand-blue-dark leading-relaxed">{row.varB}</div>
+                  </div>
+                </div>
+              </div>
+            ))}
           </div>
         </div>
       </section>
