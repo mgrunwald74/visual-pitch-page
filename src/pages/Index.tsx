@@ -39,9 +39,9 @@ const Index = () => {
   };
 
   const navItems = [
-    { name: 'Varianten', href: '#varianten' },
-    { name: 'Vorteile', href: '#vorteile' },
-    { name: 'Kontakt', href: '#kontakt' },
+    { name: 'Varianten', href: '#varianten', scrollTo: 'varianten' },
+    { name: 'Vorteile', href: '#vorteile', scrollTo: 'vorteile' },
+    { name: 'Kontakt', href: '#kontakt', scrollTo: 'kontakt' },
   ];
 
   const handleScrollTo = (id: string) => (e: React.MouseEvent<HTMLAnchorElement>) => {
@@ -69,7 +69,7 @@ const Index = () => {
             <img src="/logo.png" alt="Münchner Energie Agentur Logo" className="h-16" />
             <nav className="hidden md:flex space-x-6">
               {navItems.map((item) => (
-                <a key={item.name} href={item.href} className="nav-link">
+                <a key={item.name} href={item.href} className="nav-link" onClick={handleScrollTo(item.scrollTo)}>
                   {item.name}
                 </a>
               ))}
