@@ -1,4 +1,3 @@
-
 import React, { useEffect, useRef } from 'react';
 import { Target, ListChecks, BarChart2, Users, Zap, ShieldCheck, Gift, Handshake, MessageCircle } from 'lucide-react';
 
@@ -45,15 +44,29 @@ const Index = () => {
     { name: 'Kontakt', href: '#kontakt' },
   ];
 
+  const handleScrollTo = (id: string) => (e: React.MouseEvent<HTMLAnchorElement>) => {
+    e.preventDefault();
+    const el = document.getElementById(id);
+    if (el) {
+      el.scrollIntoView({ behavior: 'smooth' });
+    }
+  };
+
+  const handleScrollToDiv = (id: string) => (e: React.MouseEvent<HTMLDivElement> | React.KeyboardEvent<HTMLDivElement>) => {
+    e.preventDefault?.();
+    const el = document.getElementById(id);
+    if (el) {
+      el.scrollIntoView({ behavior: 'smooth' });
+    }
+  };
+
   return (
     <div className="flex flex-col min-h-screen bg-slate-50 text-slate-800 font-sans">
       {/* Header */}
       <header ref={addToRefs} className="sticky top-0 z-50 bg-white/80 backdrop-blur-md shadow-sm animated-element">
         <div className="container mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center py-4">
-            <a href="#" className="text-2xl font-bold text-brand-teal">
-              Münchner Energie Agentur <span className="text-sm block text-slate-500">Stefan Grunwald-Wiese</span>
-            </a>
+            <img src="/logo.png" alt="Münchner Energie Agentur Logo" className="h-16" />
             <nav className="hidden md:flex space-x-6">
               {navItems.map((item) => (
                 <a key={item.name} href={item.href} className="nav-link">
@@ -81,11 +94,34 @@ const Index = () => {
           <p className="text-xl md:text-2xl mb-10 animate-fade-in-up" style={{ animationDelay: '0.4s' }}>
             Mehr Umsatz und zufriedene Kunden – ganz einfach nebenbei!
           </p>
+          {/* Profilbereich: Bild links, Text rechts */}
+          <div className="flex flex-col md:flex-row items-center justify-center gap-8 mb-10 animate-fade-in-up" style={{ animationDelay: '0.5s' }}>
+            <img
+              src="/profilbild_stefan.jpeg"
+              alt="Stefan Grunwald-Wiese"
+              className="w-56 h-56 rounded-full border-4 border-white shadow-lg object-cover object-[center_0%]"
+              style={{ objectPosition: 'center 0%' }}
+            />
+            <div className="text-left md:text-left max-w-xl">
+              <p className="text-lg italic">
+                „Als Kaminkehrer-Kollege weiß ich, wie wichtig Vertrauen und Partnerschaft sind. Lass uns gemeinsam mehr erreichen!“
+              </p>
+              <span className="mt-2 block font-semibold">Stefan Grunwald-Wiese</span>
+            </div>
+          </div>
           <div className="flex flex-col sm:flex-row justify-center space-y-4 sm:space-y-0 sm:space-x-6 animate-fade-in-up" style={{ animationDelay: '0.6s' }}>
-            <a href="#variante-a" className="btn btn-green text-lg px-8 py-4">
+            <a
+              href="#variante-a"
+              className="btn btn-green text-lg px-8 py-4"
+              onClick={handleScrollTo('varianten')}
+            >
               Variante A: Energieberatung integrieren
             </a>
-            <a href="#variante-b" className="btn btn-blue text-lg px-8 py-4">
+            <a
+              href="#variante-b"
+              className="btn btn-blue text-lg px-8 py-4"
+              onClick={handleScrollTo('varianten')}
+            >
               Variante B: Empfehlungspartner werden
             </a>
           </div>
@@ -100,7 +136,14 @@ const Index = () => {
           </h2>
           <div className="grid md:grid-cols-2 gap-8 lg:gap-12">
             {/* Variant A Card */}
-            <div id="variante-a" ref={addToRefs} className="bg-gradient-to-br from-green-50 to-emerald-100 p-8 rounded-xl shadow-xl border-t-4 border-brand-green animated-element transition-all duration-300 hover:shadow-2xl hover:-translate-y-1">
+            <div
+              id="variante-a"
+              ref={addToRefs}
+              className="bg-gradient-to-br from-green-50 to-emerald-100 p-8 rounded-xl shadow-xl border-t-4 border-brand-green animated-element transition-all duration-300 hover:shadow-2xl hover:-translate-y-1 cursor-pointer focus:outline-none focus:ring-2 focus:ring-brand-green"
+              tabIndex={0}
+              onClick={handleScrollToDiv('vorteile')}
+              onKeyDown={e => { if (e.key === 'Enter' || e.key === ' ') { handleScrollToDiv('vorteile')(e); } }}
+            >
               <div className="flex items-center mb-6">
                 <Target className="w-10 h-10 text-brand-green mr-4" />
                 <h3 className="text-2xl font-semibold text-brand-green-dark">Variante A: Energieberatung selbst anbieten</h3>
@@ -113,7 +156,15 @@ const Index = () => {
               </ul>
             </div>
             {/* Variant B Card */}
-            <div id="variante-b" ref={addToRefs} className="bg-gradient-to-br from-sky-50 to-blue-100 p-8 rounded-xl shadow-xl border-t-4 border-brand-blue animated-element transition-all duration-300 hover:shadow-2xl hover:-translate-y-1" style={{ animationDelay: '0.2s' }}>
+            <div
+              id="variante-b"
+              ref={addToRefs}
+              className="bg-gradient-to-br from-sky-50 to-blue-100 p-8 rounded-xl shadow-xl border-t-4 border-brand-blue animated-element transition-all duration-300 hover:shadow-2xl hover:-translate-y-1 cursor-pointer focus:outline-none focus:ring-2 focus:ring-brand-blue"
+              tabIndex={0}
+              style={{ animationDelay: '0.2s' }}
+              onClick={handleScrollToDiv('vorteile')}
+              onKeyDown={e => { if (e.key === 'Enter' || e.key === ' ') { handleScrollToDiv('vorteile')(e); } }}
+            >
               <div className="flex items-center mb-6">
                 <Handshake className="w-10 h-10 text-brand-blue mr-4" />
                 <h3 className="text-2xl font-semibold text-brand-blue-dark">Variante B: Empfehlungspartner der MEA</h3>
@@ -139,9 +190,9 @@ const Index = () => {
             <table className="min-w-full bg-white">
               <thead>
                 <tr>
-                  <th className="px-6 py-4 text-left text-xs font-medium text-slate-500 uppercase tracking-wider bg-slate-50 rounded-tl-lg">Benefit</th>
-                  <th className="px-6 py-4 text-left text-xs font-medium uppercase tracking-wider bg-brand-green/10 text-brand-green-dark">Variante A</th>
-                  <th className="px-6 py-4 text-left text-xs font-medium uppercase tracking-wider bg-brand-blue/10 text-brand-blue-dark rounded-tr-lg">Variante B</th>
+                  <th className="px-6 py-4 text-left text-xs font-medium text-slate-500 uppercase tracking-wider bg-slate-50 rounded-tl-lg border-b border-slate-200">Benefit</th>
+                  <th className="px-6 py-4 text-left text-xs font-medium uppercase tracking-wider bg-brand-green/10 text-brand-green-dark border-b border-slate-200 border-l border-slate-200">Variante A</th>
+                  <th className="px-6 py-4 text-left text-xs font-medium uppercase tracking-wider bg-brand-blue/10 text-brand-blue-dark rounded-tr-lg border-b border-slate-200 border-l border-slate-200">Variante B</th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-slate-200">
@@ -151,10 +202,13 @@ const Index = () => {
                   { benefit: 'Verantwortung', varA: 'Volle Kontrolle & Abrechnung', varB: 'MEA übernimmt Haftung & Abwicklung' },
                   { benefit: 'Kundenbindung', varA: 'Direkter Kontakt festigt Beziehung', varB: 'Wiederkehrende Provisionen' },
                 ].map((row, index) => (
-                  <tr key={index} className={index % 2 === 0 ? 'bg-white' : 'bg-slate-50/50'}>
+                  <tr key={index} className={
+                    (index % 2 === 0 ? 'bg-white' : 'bg-slate-50/50') +
+                    ' transition-all duration-200 hover:bg-brand-green/20 hover:shadow-md'
+                  }>
                     <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-slate-900">{row.benefit}</td>
-                    <td className="px-6 py-4 whitespace-nowrap text-sm text-slate-700">{row.varA}</td>
-                    <td className="px-6 py-4 whitespace-nowrap text-sm text-slate-700">{row.varB}</td>
+                    <td className="px-6 py-4 whitespace-nowrap text-sm bg-brand-green/10 text-brand-green-dark border-l border-slate-200">{row.varA}</td>
+                    <td className="px-6 py-4 whitespace-nowrap text-sm bg-brand-blue/10 text-brand-blue-dark border-l border-slate-200">{row.varB}</td>
                   </tr>
                 ))}
               </tbody>
@@ -173,7 +227,10 @@ const Index = () => {
             1. Energieberatung selbst anbieten → Variante A<br/>
             2. Empfehlungspartner werden → Variante B
           </p>
-          <a href="mailto:kontakt@muenchnerenergieagentur.de" className="btn bg-white text-brand-teal hover:bg-slate-100 focus:ring-white text-lg px-10 py-4">
+          <a
+            href="mailto:kontakt@muenchnerenergieagentur.de"
+            className="btn bg-white text-brand-teal focus:ring-white text-lg px-10 py-4 transition-all duration-200 hover:shadow-lg hover:scale-105 hover:bg-slate-100"
+          >
             <MessageCircle className="w-5 h-5 mr-2 inline-block" /> Jetzt Kontakt aufnehmen
           </a>
         </div>
