@@ -31,7 +31,7 @@ jobs:
         password: ${{ secrets.FTP_PASSWORD }}
         protocol: ftps
         security: strict
-        local-dir: ./build/
+        local-dir: ./dist/
         server-dir: /kollegen.muenchner-energieagentur.de/
         exclude: |
           **/.git*
