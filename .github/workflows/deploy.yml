@@ -31,6 +31,9 @@ jobs:
         password: ${{ secrets.FTP_PASSWORD }}
         local-dir: ./dist/
         server-dir: /kollegen.muenchner-energieagentur.de/
+        protocol: ftp
+        passive: true
+        timeout: 60000
         exclude: |
           **/.git*
           **/.git*/**
