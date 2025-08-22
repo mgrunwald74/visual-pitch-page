@@ -27,6 +27,7 @@ const WhatsAppIcon = ({ className }: { className?: string }) => (
 const Index = () => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const sectionsRef = useRef<Array<HTMLElement | null>>([]);
+  const videoRef = useRef<HTMLVideoElement>(null);
   const [formData, setFormData] = useState({
     name: "",
     email: "",
@@ -88,6 +89,41 @@ const Index = () => {
           observer.unobserve(section);
         }
       });
+    };
+  }, []);
+
+  // Video autoplay logic
+  useEffect(() => {
+    const videoObserver = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting && videoRef.current) {
+            // Video is visible, start autoplay after 2 seconds
+            setTimeout(() => {
+              if (videoRef.current) {
+                videoRef.current.play().catch((error) => {
+                  console.log('Autoplay was prevented by the browser:', error);
+                  // Autoplay was prevented, which is normal behavior
+                  // User can still manually play the video
+                });
+              }
+            }, 2000);
+            // Stop observing once we've triggered autoplay
+            videoObserver.unobserve(entry.target);
+          }
+        });
+      },
+      { threshold: 0.5 } // Trigger when 50% of video is visible
+    );
+
+    if (videoRef.current) {
+      videoObserver.observe(videoRef.current);
+    }
+
+    return () => {
+      if (videoRef.current) {
+        videoObserver.unobserve(videoRef.current);
+      }
     };
   }, []);
 
@@ -286,8 +322,11 @@ const Index = () => {
             style={{ animationDelay: "0.45s" }}
           >
             <video
+              ref={videoRef}
               className="w-full max-w-64 rounded-lg shadow-lg border-white border-4"
               controls
+              muted
+              playsInline
               preload="metadata"
             >
               <source src="/videos/stefan.mp4" type="video/mp4" />
