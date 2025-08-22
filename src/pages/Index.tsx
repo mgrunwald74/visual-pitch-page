@@ -10,6 +10,7 @@ import {
   Phone,
   User,
   Send,
+  Volume2,
 } from "lucide-react";
 
 // WhatsApp Icon Component
@@ -40,6 +41,8 @@ const Index = () => {
     type: 'success' | 'error' | null;
     message: string;
   }>({ type: null, message: '' });
+  const [showAudioHint, setShowAudioHint] = useState(false);
+  const [videoStarted, setVideoStarted] = useState(false);
 
   useEffect(() => {
     if (isMobileMenuOpen) {
@@ -101,7 +104,13 @@ const Index = () => {
             // Video is visible, start autoplay after 2 seconds
             setTimeout(() => {
               if (videoRef.current) {
-                videoRef.current.play().catch((error) => {
+                videoRef.current.play().then(() => {
+                  setVideoStarted(true);
+                  // Show audio hint after video starts
+                  setTimeout(() => {
+                    setShowAudioHint(true);
+                  }, 1000);
+                }).catch((error) => {
                   console.log('Autoplay was prevented by the browser:', error);
                   // Autoplay was prevented, which is normal behavior
                   // User can still manually play the video
@@ -202,6 +211,17 @@ const Index = () => {
     const message = "Hallo Stefan! Ich bin Kaminkehrer und interessiere mich für die Zusammenarbeit mit der Münchner Energie Agentur. Können wir uns unterhalten?";
     const whatsappLink = `https://wa.me/4917620329486?text=${encodeURIComponent(message)}`;
     window.open(whatsappLink, '_blank');
+  };
+
+  const handleVideoClick = () => {
+    if (videoRef.current && showAudioHint) {
+      setShowAudioHint(false);
+      videoRef.current.muted = false;
+    }
+  };
+
+  const handleVideoInteraction = () => {
+    setShowAudioHint(false);
   };
 
   const handleScrollTo =
@@ -318,20 +338,41 @@ const Index = () => {
           </p>
           {/* Video Section */}
           <div
-            className="flex justify-center mb-12 animate-fade-in-up"
+            className="flex justify-center mb-12 animate-fade-in-up relative"
             style={{ animationDelay: "0.45s" }}
           >
-            <video
-              ref={videoRef}
-              className="w-full max-w-64 rounded-lg shadow-lg border-white border-4"
-              controls
-              muted
-              playsInline
-              preload="metadata"
-            >
-              <source src="/videos/stefan.mp4" type="video/mp4" />
-              Ihr Browser unterstützt das Video-Element nicht.
-            </video>
+            <div className="relative">
+              <video
+                ref={videoRef}
+                className="w-full max-w-64 rounded-lg shadow-lg border-white border-4"
+                controls
+                muted
+                playsInline
+                preload="metadata"
+                onClick={handleVideoClick}
+                onPlay={handleVideoInteraction}
+                onPause={handleVideoInteraction}
+                onVolumeChange={handleVideoInteraction}
+              >
+                <source src="/videos/stefan.mp4" type="video/mp4" />
+                Ihr Browser unterstützt das Video-Element nicht.
+              </video>
+              
+              {/* Audio Hint Overlay */}
+              {showAudioHint && videoStarted && (
+                <div 
+                  className="absolute inset-0 flex items-center justify-center bg-black/50 rounded-lg cursor-pointer transition-opacity duration-300 hover:bg-black/60"
+                  onClick={handleVideoClick}
+                >
+                  <div className="bg-white/90 backdrop-blur-sm rounded-lg p-4 text-center shadow-xl border border-white/20 animate-pulse">
+                    <Volume2 className="w-8 h-8 mx-auto mb-2 text-brand-teal" />
+                    <p className="text-brand-teal font-semibold text-sm">
+                      🔊 Klicken für Ton
+                    </p>
+                  </div>
+                </div>
+              )}
+            </div>
           </div>
           {/* Profilbereich: Bild links, Text rechts */}
           <div
